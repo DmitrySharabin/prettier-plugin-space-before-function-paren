@@ -156,13 +156,19 @@ export default {
 							expect: "const add = (a, b) => a + b;",
 						},
 						{
-							name: "Anonymous functions",
+							name: "Anonymous function expressions",
 							description: "Prettier already handles this case.",
 							arg: "const add = function(a, b) {\n\treturn a + b;\n};",
 							expect: "const add = function (a, b) {\n\treturn a + b;\n};",
 						},
+						{
+							name: "Anonymous function declarations",
+							description: "Prettier already handles this case.",
+							arg: "export default function(a, b) {\n\treturn a + b;\n}",
+							expect: "export default function (a, b) {\n\treturn a + b;\n}",
+						},
 					],
-				}
+				},
 			],
 		},
 		{
@@ -351,10 +357,16 @@ export default {
 							expect: "const add = (a: number, b: number): number => a + b;",
 						},
 						{
-							name: "Anonymous functions",
+							name: "Anonymous function expressions",
 							description: "Prettier already handles this case.",
 							arg: "const add = function(a: number, b: number): number {\n\treturn a + b;\n};",
 							expect: "const add = function (a: number, b: number): number {\n\treturn a + b;\n};",
+						},
+						{
+							name: "Anonymous function declarations",
+							description: "Prettier already handles this case.",
+							arg: "export default function(a: number, b: number): number {\n\treturn a + b;\n}",
+							expect: "export default function (a: number, b: number): number {\n\treturn a + b;\n}",
 						},
 						{
 							name: "Type aliases",

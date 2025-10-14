@@ -507,7 +507,7 @@ becomes:
 const add = (a, b) => a + b;
 ```
 
-### Anonymous functions
+### Anonymous function expressions
 Prettier already handles this case.
 
 ```js
@@ -522,6 +522,23 @@ becomes:
 const add = function (a, b) {
 	return a + b;
 };
+```
+
+### Anonymous function declarations
+Prettier already handles this case.
+
+```js
+export default function(a, b) {
+	return a + b;
+}
+```
+
+becomes:
+
+```js
+export default function (a, b) {
+	return a + b;
+}
 ```
 
 
@@ -1128,7 +1145,7 @@ becomes:
 const add = (a: number, b: number): number => a + b;
 ```
 
-### Anonymous functions
+### Anonymous function expressions
 Prettier already handles this case.
 
 ```ts
@@ -1143,6 +1160,23 @@ becomes:
 const add = function (a: number, b: number): number {
 	return a + b;
 };
+```
+
+### Anonymous function declarations
+Prettier already handles this case.
+
+```ts
+export default function(a: number, b: number): number {
+	return a + b;
+}
+```
+
+becomes:
+
+```ts
+export default function (a: number, b: number): number {
+	return a + b;
+}
 ```
 
 ### Type aliases
