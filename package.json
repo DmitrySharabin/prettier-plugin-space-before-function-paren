@@ -17,18 +17,8 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/LeaVerou/prettier-plugin-space-before-function-paren.git"
+    "url": "git+https://github.com/DmitrySharabin/prettier-plugin-space-before-function-paren.git"
   },
-  "funding": [
-    {
-      "type": "individual",
-      "url": "https://github.com/sponsors/LeaVerou"
-    },
-    {
-      "type": "opencollective",
-      "url": "https://opencollective.com/leaverou"
-    }
-  ],
   "license": "MIT",
   "type": "module",
   "description": "",
