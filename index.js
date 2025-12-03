@@ -35,7 +35,9 @@ export const printers = {
 			// Handle object methods in TypeScript
 			(node.type === "Identifier" && parent?.type === "Property" && (parent.method || parent.kind === "get" || parent.kind === "set"))) {
 				// Skip anonymous functions (they are already formatted properly)
+				// and decorated class methods (for now, they break the code badly)
 				if (
+					node.decorators?.length ||
 					(node.type === "FunctionExpression" || node.type === "FunctionDeclaration") &&
 					!node.id
 				) {
