@@ -31,3 +31,4 @@ Current version is a proof of concept, please try it out and give feedback!
 
 Things not handled yet:
 - Computed object method names in TS
+- Decorated class methods in TS

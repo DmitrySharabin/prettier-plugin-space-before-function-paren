@@ -341,6 +341,12 @@ export default {
 							arg: "type MethodType = {\n\tmethod(): void;\n};",
 							expect: "type MethodType = {\n\tmethod (): void;\n};",
 						},
+						{
+							name: "Decorated class methods",
+							arg: "class Foo {\n\t@decorator(() => {})\n\tmethod(): void {}\n}",
+							expect: "class Foo {\n\t@decorator(() => {})\n\tmethod (): void {}\n}",
+							skip: true,
+						},
 					],
 				},
 				{
