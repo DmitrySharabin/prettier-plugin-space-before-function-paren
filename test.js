@@ -51,9 +51,19 @@ export default {
 							expect: "const foo = {\n\tget foo () {\n\t\treturn true;\n\t}\n};",
 						},
 						{
+							name: "Computed object getters",
+							arg: "const foo = {\n\tget [name]() {\n\t\treturn this._name;\n\t}\n};",
+							expect: "const foo = {\n\tget [name] () {\n\t\treturn this._name;\n\t}\n};",
+						},
+						{
 							name: "Object setters",
 							arg: "const foo = {\n\tset foo(value) {\n\t\tthis._foo = value;\n\t}\n};",
 							expect: "const foo = {\n\tset foo (value) {\n\t\tthis._foo = value;\n\t}\n};",
+						},
+						{
+							name: "Computed object setters",
+							arg: "const foo = {\n\tset [name](value) {\n\t\tthis._name = value;\n\t}\n};",
+							expect: "const foo = {\n\tset [name] (value) {\n\t\tthis._name = value;\n\t}\n};",
 						},
 						{
 							name: "Class constructors",
@@ -119,6 +129,16 @@ export default {
 							name: "Generator functions",
 							arg: "function* test() {\n\tyield 1;\n}",
 							expect: "function* test () {\n\tyield 1;\n}",
+						},
+						{
+							name: "Generator object methods",
+							arg: "const foo = {\n\t*method() {\n\t\tyield 1;\n\t}\n};",
+							expect: "const foo = {\n\t*method () {\n\t\tyield 1;\n\t}\n};",
+						},
+						{
+							name: "Named function expressions",
+							arg: "class Foo {\n\tmethod = function named() {};\n}",
+							expect: "class Foo {\n\tmethod = function named () {};\n}",
 						},
 						{
 							name: "Named exported functions",
@@ -204,7 +224,6 @@ export default {
 							name: "Computed object methods",
 							arg: "const foo = {\n\t[methodName](): void {\n\t\treturn;\n\t}\n};",
 							expect: "const foo = {\n\t[methodName] (): void {\n\t\treturn;\n\t}\n};",
-							skip: true,
 						},
 						{
 							name: "Object getters",
@@ -212,9 +231,19 @@ export default {
 							expect: "const foo = {\n\tget foo (): boolean {\n\t\treturn true;\n\t}\n};",
 						},
 						{
+							name: "Computed object getters",
+							arg: "const foo = {\n\tget [name](): string {\n\t\treturn '';\n\t}\n};",
+							expect: "const foo = {\n\tget [name] (): string {\n\t\treturn \"\";\n\t}\n};",
+						},
+						{
 							name: "Object setters",
 							arg: "const foo = {\n\tset foo(value: boolean) {\n\t\tthis._foo = value;\n\t}\n};",
 							expect: "const foo = {\n\tset foo (value: boolean) {\n\t\tthis._foo = value;\n\t}\n};",
+						},
+						{
+							name: "Computed object setters",
+							arg: "const foo = {\n\tset [name](value: string) {\n\t\tthis._name = value;\n\t}\n};",
+							expect: "const foo = {\n\tset [name] (value: string) {\n\t\tthis._name = value;\n\t}\n};",
 						},
 						{
 							name: "Class constructors",
@@ -307,6 +336,11 @@ export default {
 							expect: "interface Foo {\n\tmethod (a: number, b: number): number;\n}",
 						},
 						{
+							name: "Optional interface methods",
+							arg: "interface Foo {\n\tmethod?(a: number): number;\n}",
+							expect: "interface Foo {\n\tmethod? (a: number): number;\n}",
+						},
+						{
 							name: "Function with type parameters",
 							arg: "function foo<T>(arg: T): T {\n\treturn arg;\n}",
 							expect: "function foo<T> (arg: T): T {\n\treturn arg;\n}",
@@ -337,6 +371,11 @@ export default {
 							expect: "declare namespace Foo {\n\texport function test (a: number, b: number): number;\n}",
 						},
 						{
+							name: "Standalone declare function",
+							arg: "declare function foo(a: number): void;",
+							expect: "declare function foo (a: number): void;",
+						},
+						{
 							name: "Function type aliases",
 							arg: "type MethodType = {\n\tmethod(): void;\n};",
 							expect: "type MethodType = {\n\tmethod (): void;\n};",
@@ -345,7 +384,6 @@ export default {
 							name: "Decorated class methods",
 							arg: "class Foo {\n\t@decorator(() => {})\n\tmethod(): void {}\n}",
 							expect: "class Foo {\n\t@decorator(() => {})\n\tmethod (): void {}\n}",
-							skip: true,
 						},
 					],
 				},
@@ -383,6 +421,22 @@ export default {
 							name: "Function types",
 							arg: "type Func = { (a: string): number };",
 							expect: "type Func = { (a: string): number };",
+						},
+						{
+							name: "Interface property with function type",
+							arg: "interface Foo {\n\tmethod: (a: number) => number;\n}",
+							expect: "interface Foo {\n\tmethod: (a: number) => number;\n}",
+						},
+						{
+							name: "Constructor signatures",
+							description: "Prettier already handles this case.",
+							arg: "type Ctor = {\n\tnew(): Foo;\n};",
+							expect: "type Ctor = {\n\tnew (): Foo;\n};",
+						},
+						{
+							name: "Index signatures",
+							arg: "interface Foo {\n\t[key: string]: number;\n}",
+							expect: "interface Foo {\n\t[key: string]: number;\n}",
 						},
 						{
 							name: "Object literal",

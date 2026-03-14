@@ -138,6 +138,26 @@ const foo = {
 };
 ```
 
+### Computed object getters
+
+```js
+const foo = {
+	get [name]() {
+		return this._name;
+	}
+};
+```
+
+becomes:
+
+```js
+const foo = {
+	get [name] () {
+		return this._name;
+	}
+};
+```
+
 ### Object setters
 
 ```js
@@ -154,6 +174,26 @@ becomes:
 const foo = {
 	set foo (value) {
 		this._foo = value;
+	}
+};
+```
+
+### Computed object setters
+
+```js
+const foo = {
+	set [name](value) {
+		this._name = value;
+	}
+};
+```
+
+becomes:
+
+```js
+const foo = {
+	set [name] (value) {
+		this._name = value;
 	}
 };
 ```
@@ -416,6 +456,42 @@ function* test () {
 }
 ```
 
+### Generator object methods
+
+```js
+const foo = {
+	*method() {
+		yield 1;
+	}
+};
+```
+
+becomes:
+
+```js
+const foo = {
+	*method () {
+		yield 1;
+	}
+};
+```
+
+### Named function expressions
+
+```js
+class Foo {
+	method = function named() {};
+}
+```
+
+becomes:
+
+```js
+class Foo {
+	method = function named () {};
+}
+```
+
 ### Named exported functions
 
 ```js
@@ -616,6 +692,26 @@ const foo = {
 };
 ```
 
+### Computed object methods
+
+```ts
+const foo = {
+	[methodName](): void {
+		return;
+	}
+};
+```
+
+becomes:
+
+```ts
+const foo = {
+	[methodName] (): void {
+		return;
+	}
+};
+```
+
 ### Object getters
 
 ```ts
@@ -636,6 +732,26 @@ const foo = {
 };
 ```
 
+### Computed object getters
+
+```ts
+const foo = {
+	get [name](): string {
+		return '';
+	}
+};
+```
+
+becomes:
+
+```ts
+const foo = {
+	get [name] (): string {
+		return "";
+	}
+};
+```
+
 ### Object setters
 
 ```ts
@@ -652,6 +768,26 @@ becomes:
 const foo = {
 	set foo (value: boolean) {
 		this._foo = value;
+	}
+};
+```
+
+### Computed object setters
+
+```ts
+const foo = {
+	set [name](value: string) {
+		this._name = value;
+	}
+};
+```
+
+becomes:
+
+```ts
+const foo = {
+	set [name] (value: string) {
+		this._name = value;
 	}
 };
 ```
@@ -1006,6 +1142,22 @@ interface Foo {
 }
 ```
 
+### Optional interface methods
+
+```ts
+interface Foo {
+	method?(a: number): number;
+}
+```
+
+becomes:
+
+```ts
+interface Foo {
+	method? (a: number): number;
+}
+```
+
 ### Function with type parameters
 
 ```ts
@@ -1102,6 +1254,18 @@ declare namespace Foo {
 }
 ```
 
+### Standalone declare function
+
+```ts
+declare function foo(a: number): void;
+```
+
+becomes:
+
+```ts
+declare function foo (a: number): void;
+```
+
 ### Function type aliases
 
 ```ts
@@ -1116,6 +1280,24 @@ becomes:
 type MethodType = {
 	method (): void;
 };
+```
+
+### Decorated class methods
+
+```ts
+class Foo {
+	@decorator(() => {})
+	method(): void {}
+}
+```
+
+becomes:
+
+```ts
+class Foo {
+	@decorator(() => {})
+	method (): void {}
+}
 ```
 
 
@@ -1203,6 +1385,55 @@ becomes:
 type Func = { (a: string): number };
 ```
 
+### Interface property with function type
+
+```ts
+interface Foo {
+	method: (a: number) => number;
+}
+```
+
+becomes:
+
+```ts
+interface Foo {
+	method: (a: number) => number;
+}
+```
+
+### Constructor signatures
+Prettier already handles this case.
+
+```ts
+type Ctor = {
+	new(): Foo;
+};
+```
+
+becomes:
+
+```ts
+type Ctor = {
+	new (): Foo;
+};
+```
+
+### Index signatures
+
+```ts
+interface Foo {
+	[key: string]: number;
+}
+```
+
+becomes:
+
+```ts
+interface Foo {
+	[key: string]: number;
+}
+```
+
 ### Object literal
 
 ```ts
@@ -1219,7 +1450,3 @@ let a = { value: null, prev: null, next: null as never };
 ## Status
 
 Current version is a proof of concept, please try it out and give feedback!
-
-Things not handled yet:
-- Computed object method names in TS
-- Decorated class methods in TS

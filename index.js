@@ -17,7 +17,6 @@ export const printers = {
 
 		print (path, options, print) {
 			let node = path.getValue();
-			let parent = path.getParentNode();
 
 			if ([
 				// JavaScript node types
@@ -31,13 +30,11 @@ export const printers = {
 				"TSMethodSignature",
 				"TSDeclareFunction",
 				"TSAbstractMethodDefinition",
-			].includes(node.type) || 
-			// Handle object methods in TypeScript
-			(node.type === "Identifier" && parent?.type === "Property" && (parent.method || parent.kind === "get" || parent.kind === "set"))) {
+			].includes(node.type) ||
+			// Handle object methods in TypeScript (Property is what TS uses instead of ObjectMethod)
+			(node.type === "Property" && (node.method || node.kind === "get" || node.kind === "set"))) {
 				// Skip anonymous functions (they are already formatted properly)
-				// and decorated class methods (for now, they break the code badly)
 				if (
-					node.decorators?.length ||
 					(node.type === "FunctionExpression" || node.type === "FunctionDeclaration") &&
 					!node.id
 				) {
@@ -46,16 +43,13 @@ export const printers = {
 
 				let doc = estreePlugin.printers.estree.print(path, options, print);
 
-				// Find the first "(" and add a space before it
-				let contents = findContents(doc);
+				// For decorated methods, search for "(" only after the method name
+				// to avoid matching "(" inside decorator arguments
+				let marker = node.decorators?.length ? (node.key?.name || node.key?.value) : null;
+				let contents = findContents(doc, marker);
 				if (contents) {
 					// Open paren is always the second item in the contents array
 					contents[1] = group([" ", "("]);
-				}
-				else if (node.type === "Identifier" && !parent?.computed) {
-					// Object method in TypeScript. `doc` is already an array where the first item is the method name.
-					// TODO: Properly handle computed object methods. We should get `[methodName] () {...}`, not `[methodName ] () {...}`
-					doc[0] = group([doc[0], " "]);
 				}
 
 				return doc;
@@ -66,28 +60,40 @@ export const printers = {
 	},
 };
 
-// Recursively find the (possibly nested) array with the first "(" in the doc produced by prettier
-function findContents (doc) {
-	if (!doc) {
+// Recursively find the (possibly nested) array with the first "(" in the doc produced by prettier.
+// If `marker` is given, only match "(" that appears after the marker string (used for decorated methods).
+function findContents (doc, marker) {
+	let found = !marker;
+
+	function search (node) {
+		if (!node) {
+			return null;
+		}
+
+		if (!found && node === marker) {
+			found = true;
+			return null;
+		}
+
+		if (node.type === "group") {
+			return search(node.contents);
+		}
+
+		if (Array.isArray(node)) {
+			if (found && node.includes("(")) {
+				return node;
+			}
+
+			for (let item of node) {
+				let result = search(item);
+				if (result) {
+					return result;
+				}
+			}
+		}
+
 		return null;
 	}
 
-	if (doc.type === "group") {
-		return findContents(doc.contents);
-	}
-
-	if (Array.isArray(doc)) {
-		if (doc.includes("(")) {
-			return doc;
-		}
-
-		for (let item of doc) {
-			let contents = findContents(item);
-			if (contents) {
-				return contents;
-			}
-		}
-	}
-
-	return null;
+	return search(doc);
 }
