@@ -1,7 +1,7 @@
 {
   "name": "prettier-plugin-space-before-function-paren",
   "description": "Prettier plugin to add a space before function parentheses.",
-  "version": "0.0.10",
+  "version": "0.1.0",
   "type": "module",
   "main": "index.js",
   "exports": {
