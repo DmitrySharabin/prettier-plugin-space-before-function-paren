@@ -9,7 +9,7 @@
   },
   "scripts": {
     "build": "node _build/update-readme.js",
-    "release": "release-it",
+    "release": "npm login && release-it",
     "test": "htest test.js"
   },
   "keywords": [],
